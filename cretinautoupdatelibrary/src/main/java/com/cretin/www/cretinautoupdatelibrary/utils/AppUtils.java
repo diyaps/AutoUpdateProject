@@ -45,7 +45,7 @@ public class AppUtils {
     public static void installApkFile(Context context, File file) {
         currentFile = file;
 
-        if (!AppUtils.checkInstallPermission(context)) {
+        if (!checkInstallPermission(context)) {
             requestInstallPermission(context);
             return;
         }
