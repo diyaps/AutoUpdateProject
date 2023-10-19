@@ -26,7 +26,15 @@ import java.io.File;
  */
 public class AppUtils {
 
+    public static int INSTALL_PERMISSION_REQUEST_CODE = 10086;
+
     private static float density;
+    private static File currentFile = null;
+
+
+    public static void installApkFile(Context context) {
+        installApkFile(context, currentFile);
+    }
 
     /**
      * 安装app
@@ -35,6 +43,13 @@ public class AppUtils {
      * @param file
      */
     public static void installApkFile(Context context, File file) {
+        currentFile = file;
+
+        if (!AppUtils.checkInstallPermission(context)) {
+            requestInstallPermission(context);
+            return;
+        }
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri uri = null;
@@ -207,6 +222,23 @@ public class AppUtils {
             e.printStackTrace();
         }
         return packInfo;
+    }
+
+    public static boolean checkInstallPermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return context.getPackageManager().canRequestPackageInstalls();
+        } else {
+            // Android 6.0 以下版本默认已经授予该权限
+            return true;
+        }
+    }
+
+    public static void requestInstallPermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Uri uri = Uri.parse("package:" + getPackageName());
+            Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, uri);
+            context.startActivityForResult(intent, INSTALL_PERMISSION_REQUEST_CODE);
+        }
     }
 
     /**
