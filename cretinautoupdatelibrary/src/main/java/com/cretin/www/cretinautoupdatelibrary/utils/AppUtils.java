@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;  
 
 import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.OnDialogClickListener;
@@ -46,6 +47,7 @@ public class AppUtils {
         currentFile = file;
 
         if (!checkInstallPermission(context)) {
+            Toast.makeText(context, "未检测到安装权限，尝试跳转至打开权限界面", Toast.LENGTH_SHORT).show();  
             requestInstallPermission(context);
             return;
         }
@@ -227,6 +229,8 @@ public class AppUtils {
     public static boolean checkInstallPermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return context.getPackageManager().canRequestPackageInstalls();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.INSTALL_NON_MARKET_APPS, 0) == 1;
         } else {
             // Android 6.0 以下版本默认已经授予该权限
             return true;
