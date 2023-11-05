@@ -231,7 +231,7 @@ public abstract class RootActivity extends AppCompatActivity {
         if (requestCode == AppUtils.INSTALL_PERMISSION_REQUEST_CODE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (getPackageManager().canRequestPackageInstalls()) {
-                    AppUtils.installApkFile(context);
+                    AppUtils.installApkFile(this);
                 }
             }
         }

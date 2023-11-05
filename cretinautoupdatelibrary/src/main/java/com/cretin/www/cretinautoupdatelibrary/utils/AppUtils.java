@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;  
+import android.provider.Settings;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.OnDialogClickListener;
@@ -239,9 +240,9 @@ public class AppUtils {
 
     public static void requestInstallPermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Uri uri = Uri.parse("package:" + getPackageName());
+            Uri uri = Uri.parse("package:" + context.getPackageName());
             Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, uri);
-            context.startActivityForResult(intent, INSTALL_PERMISSION_REQUEST_CODE);
+            ((Activity) context).startActivityForResult(intent, INSTALL_PERMISSION_REQUEST_CODE);
         }
     }
 
