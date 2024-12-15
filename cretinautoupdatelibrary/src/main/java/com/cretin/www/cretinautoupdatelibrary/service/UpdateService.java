@@ -29,6 +29,7 @@ public class UpdateService extends Service {
         super.onCreate();
         registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.DOWNLOAD_ONLY));
         registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.RE_DOWNLOAD));
+        registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.INSTALL_APK));
         registerReceiver(updateReceiver, new IntentFilter(getPackageName() + UpdateReceiver.CANCEL_DOWNLOAD));
     }
 

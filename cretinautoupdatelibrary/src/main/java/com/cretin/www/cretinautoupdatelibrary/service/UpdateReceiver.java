@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
 import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
@@ -29,6 +30,11 @@ public class UpdateReceiver extends BroadcastReceiver {
      * 进度key
      */
     public static final String PROGRESS = "app.progress";
+
+    /**
+     * apk path key
+     */
+    public static final String INSTALL_APK = "app.install";
 
     /**
      * ACTION_UPDATE
@@ -101,6 +107,9 @@ public class UpdateReceiver extends BroadcastReceiver {
             NotificationManager systemService =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             downloadComplete(context, notifyId, systemService);
+        } else if ((context.getPackageName() + INSTALL_APK).equals(action)) {
+            Log.d("DDD", "now install");
+            AppUpdateUtils.getInstance().installApk(null);
         }
     }
 
@@ -112,10 +121,10 @@ public class UpdateReceiver extends BroadcastReceiver {
      * @param systemService
      */
     private void downloadComplete(Context context, int notifyId, NotificationManager systemService) {
-        systemService.cancel(notifyId);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            systemService.deleteNotificationChannel(notificationChannel);
-        }
+        //systemService.cancel(notifyId);
+        //if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            //systemService.deleteNotificationChannel(notificationChannel);
+        //}
     }
 
     /**
@@ -165,9 +174,16 @@ public class UpdateReceiver extends BroadcastReceiver {
             builder.setContentIntent(pendingIntent);
             // 通知栏标题
             builder.setContentTitle(ResUtils.getString(R.string.download_fail));
-        } else {
+        } else if (progress < 100){
             // 通知栏标题
             builder.setContentTitle(AppUtils.getAppName(context) + " " + ResUtils.getString(R.string.has_download) + progress + "%");
+        } else {
+            builder.setProgress(100, 100, false);
+            Intent intent = new Intent(context.getPackageName() + INSTALL_APK);
+            intent.setPackage(context.getPackageName());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            builder.setContentIntent(pendingIntent);
+            builder.setContentTitle(ResUtils.getString(R.string.download_complete));
         }
 
         // 设置只响一次

@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.cretin.www.cretinautoupdatelibrary.model.LibraryUpdateEntity;
 import com.cretin.www.cretinautoupdatelibrary.utils.JSONHelper;
 
 import java.io.BufferedReader;
@@ -62,7 +63,9 @@ public class HttpUtils {
                         }
                         bf.close();
                         is.close();
-                        new ResponseCall(context, listener).doSuccess(JSONHelper.parseObject(buffer.toString(), cls));
+                        LibraryUpdateEntity ent = (LibraryUpdateEntity)JSONHelper.parseObject(buffer.toString(), cls);
+                        ent.makeRealUrl();
+                        new ResponseCall(context, listener).doSuccess(ent);
                     } else {
                         if (listener != null) {
                             // 回调onError()方法

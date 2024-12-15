@@ -28,4 +28,6 @@ public interface LibraryUpdateEntity {
 
     //获取文件的加密校验值
     String getFileMd5Check();
+
+    void makeRealUrl();
 }

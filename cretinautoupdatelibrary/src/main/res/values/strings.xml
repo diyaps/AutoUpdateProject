@@ -5,6 +5,7 @@
     <string name="tips_new_version">发现新版本...</string>
     <string name="download_fail">下载失败</string>
     <string name="has_download">已下载</string>
+    <string name="download_complete">下载完成，点击安装</string>
     <string name="permission_to_store">暂无储存权限，是否前往打开</string>
     <string name="cancel">取消</string>
     <string name="go_to">前往</string>

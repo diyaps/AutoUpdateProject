@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateBackgroundActivity;
 import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType10Activity;
@@ -39,11 +40,16 @@ import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.cretin.www.cretinautoupdatelibrary.utils.AppUtils.getAppLocalPath;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 /**
  * @date: on 2019-10-09
@@ -59,6 +65,7 @@ public class AppUpdateUtils {
     private static UpdateConfig updateConfig;
     //是否初始化
     private static boolean isInit;
+    private static long notiTime = 0;
 
     //下载任务
     private BaseDownloadTask downloadTask;
@@ -393,7 +400,15 @@ public class AppUpdateUtils {
         }
         LogUtils.log("文件下载完成，准备安装，文件地址：" + downloadUpdateApkFilePath);
         //校验MD5
-        File newFile = new File(path);
+        installApk(path);
+    }
+
+    public void installApk(String path) {
+        String path1 = path != null ? path : downloadTask.getPath();
+        if (path1 == null) {
+            return;
+        }
+        File newFile = new File(path1);
         if (newFile.exists()) {
             //如果需要进行MD5校验
             if (updateConfig.isNeedFileMD5Check()) {
@@ -436,7 +451,10 @@ public class AppUpdateUtils {
         isDownloading = true;
         int progress = (int) (soFarBytes * 100.0 / totalBytes);
         if (progress < 0) progress = 0;
-        UpdateReceiver.send(mContext, progress);
+        if (System.currentTimeMillis() - 500 > notiTime) {
+            notiTime = System.currentTimeMillis();
+            UpdateReceiver.send(mContext, progress);
+        }
         for (AppDownloadListener appDownloadListener : getAllAppDownloadListener()) {
             appDownloadListener.downloading(progress);
         }

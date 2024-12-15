@@ -64,7 +64,7 @@ public class AppUtils {
             uri = Uri.fromFile(file);
         }
         intent.setDataAndType(uri, "application/vnd.android.package-archive");
-        if (context.getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
+        if (!context.getPackageManager().queryIntentActivities(intent, 0).isEmpty()) {
             context.startActivity(intent);
         }
     }

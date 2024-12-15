@@ -154,4 +154,9 @@ public class UpdateModel implements LibraryUpdateEntity {
     public String getFileMd5Check() {
         return null;
     }
+
+    @Override
+    public void makeRealUrl() {
+
+    }
 }

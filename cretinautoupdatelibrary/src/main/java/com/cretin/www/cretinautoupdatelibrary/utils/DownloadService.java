@@ -15,6 +15,7 @@ import android.os.IBinder;
 import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -117,8 +118,9 @@ public class DownloadService extends Service {
                 httpUrl.setConnectTimeout(10 * 1000);
 
                 String realURL = httpUrl.getHeaderField("Location");
+                Log.d("DDD", "url = " + realURL);
                 httpUrl.disconnect();
-                url = new URL(downUrl);
+                url = new URL(realURL);
                 httpUrl = (HttpURLConnection) url.openConnection();
                 //设置网络连接超时时间5S
                 httpUrl.setConnectTimeout(10 * 1000);
