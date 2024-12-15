@@ -161,7 +161,7 @@ public class UpdateReceiver extends BroadcastReceiver {
         if (progress == -1) {
             Intent intent = new Intent(context.getPackageName() + RE_DOWNLOAD);
             intent.setPackage(context.getPackageName());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             builder.setContentIntent(pendingIntent);
             // 通知栏标题
             builder.setContentTitle(ResUtils.getString(R.string.download_fail));

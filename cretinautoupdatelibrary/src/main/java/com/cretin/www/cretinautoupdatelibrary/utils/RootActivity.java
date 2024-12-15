@@ -1,6 +1,7 @@
 package com.cretin.www.cretinautoupdatelibrary.utils;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,24 +10,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.cretin.www.cretinautoupdatelibrary.R;
-import com.cretin.www.cretinautoupdatelibrary.activity.UpdateType1Activity;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppDownloadListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.AppUpdateInfoListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.MD5CheckListener;
 import com.cretin.www.cretinautoupdatelibrary.interfaces.OnDialogClickListener;
 import com.cretin.www.cretinautoupdatelibrary.model.DownloadInfo;
 import com.cretin.www.cretinautoupdatelibrary.service.UpdateService;
-import com.cretin.www.cretinautoupdatelibrary.utils.AppUpdateUtils;
-import com.cretin.www.cretinautoupdatelibrary.utils.AppUtils;
-import com.cretin.www.cretinautoupdatelibrary.utils.NetWorkUtils;
-import com.cretin.www.cretinautoupdatelibrary.utils.ResUtils;
 
 /**
  * @date: on 2019-10-11
@@ -53,6 +47,7 @@ public abstract class RootActivity extends AppCompatActivity {
         downloadInfo = getIntent().getParcelableExtra("info");
         AppUpdateUtils.getInstance().addAppDownloadListener(appDownloadListener);
         AppUpdateUtils.getInstance().addAppUpdateInfoListener(appUpdateInfoListener);
+        AppUpdateUtils.getInstance().addActivityContext(this);
     }
 
     @Override
@@ -217,6 +212,7 @@ public abstract class RootActivity extends AppCompatActivity {
      *
      * @param context
      * @param info
+     * @return
      */
     public static void launchActivity(Context context, DownloadInfo info, Class cla) {
         Intent intent = new Intent(context, cla);

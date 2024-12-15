@@ -1,5 +1,6 @@
 package com.cretin.www.cretinautoupdatelibrary.utils;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -53,6 +54,7 @@ import static com.cretin.www.cretinautoupdatelibrary.utils.AppUtils.getAppLocalP
 public class AppUpdateUtils {
 
     private static Application mContext;
+    private static Activity mActivity;
     private static AppUpdateUtils updateUtils;
     private static UpdateConfig updateConfig;
     //是否初始化
@@ -402,7 +404,7 @@ public class AppUpdateUtils {
                         for (MD5CheckListener md5CheckListener : getAllMD5CheckListener()) {
                             md5CheckListener.fileMd5CheckSuccess();
                         }
-                        AppUtils.installApkFile(mContext, newFile);
+                        AppUtils.installApkFile(mActivity, newFile);
                         LogUtils.log("文件MD5校验成功");
                     } else {
                         //校验失败
@@ -414,11 +416,11 @@ public class AppUpdateUtils {
                 } catch (Exception e) {
                     LogUtils.log("文件MD5解析失败，抛出异常：" + e.getMessage());
                     //安装文件
-                    AppUtils.installApkFile(mContext, newFile);
+                    AppUtils.installApkFile(mActivity, newFile);
                 }
             } else {
                 //安装文件
-                AppUtils.installApkFile(mContext, newFile);
+                AppUtils.installApkFile(mActivity, newFile);
             }
         }
     }
@@ -581,6 +583,10 @@ public class AppUpdateUtils {
             appUpdateInfoListenerList.add(appUpdateInfoListener);
         }
         return this;
+    }
+
+    public void addActivityContext(Activity activity) {
+        mActivity = activity;
     }
 
     public List<AppUpdateInfoListener> getAllAppUpdateInfoListener() {

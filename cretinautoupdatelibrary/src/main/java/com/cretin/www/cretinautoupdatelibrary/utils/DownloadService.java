@@ -12,8 +12,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.v4.content.FileProvider;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.content.FileProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -112,8 +112,17 @@ public class DownloadService extends Service {
                 //建立链接
                 url = new URL(downUrl);
                 httpUrl = (HttpURLConnection) url.openConnection();
+                httpUrl.setInstanceFollowRedirects(false);
                 //设置网络连接超时时间5S
                 httpUrl.setConnectTimeout(10 * 1000);
+
+                String realURL = httpUrl.getHeaderField("Location");
+                httpUrl.disconnect();
+                url = new URL(downUrl);
+                httpUrl = (HttpURLConnection) url.openConnection();
+                //设置网络连接超时时间5S
+                httpUrl.setConnectTimeout(10 * 1000);
+
                 //连接指定的资源
                 httpUrl.connect();
                 //获取网络输入流
